@@ -171,6 +171,8 @@ class Restaurant extends FoodEstablishment
 
     private $activeMenuTaxon;
 
+    private $cashOnDelivery = false;
+
     /**
      * @var Contract
      * @Groups({"order_create"})
@@ -549,5 +551,17 @@ class Restaurant extends FoodEstablishment
             'distance' => $distance,
             'dropoff' => $dropoff,
         ]);
+    }
+
+    public function getCashOnDelivery()
+    {
+        return $this->cashOnDelivery;
+    }
+
+    public function setCashOnDelivery($cashOnDelivery)
+    {
+        $this->cashOnDelivery = $cashOnDelivery;
+
+        return $this;
     }
 }

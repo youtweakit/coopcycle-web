@@ -104,6 +104,11 @@ AppBundle\Entity\Restaurant:
             nullable: true
             precision: 0
             column: additional_properties
+        cashOnDelivery:
+            type: boolean
+            column: cash_on_delivery
+            options:
+                default: false
     manyToMany:
         servesCuisine:
             targetEntity: AppBundle\Entity\Cuisine
