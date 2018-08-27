@@ -68,7 +68,7 @@
         "league/csv": "^9.1",
         "twig/twig": "^2.0",
         "sylius/order-bundle": "^1.2",
-        "sylius/payment": "^1.2",
+        "sylius/payment-bundle": "^1.2",
         "laravolt/avatar": "^2.0",
         "sylius/product-bundle": "^1.2",
         "duccio/apns-php": "^1.0",
