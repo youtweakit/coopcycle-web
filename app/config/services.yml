@@ -83,6 +83,8 @@ services:
     alias: 'libphonenumber.phone_number_util'
     public: true
   Liip\ImagineBundle\Service\FilterService: '@liip_imagine.service.filter'
+  Craue\ConfigBundle\Util\Config: '@craue_config_default'
+  Craue\ConfigBundle\CacheAdapter\CacheAdapterInterface: '@craue_config_cache_adapter'
 
   AppBundle\Routing\FoodtechEnabledAwareLoader:
     arguments:
@@ -487,12 +489,8 @@ services:
 
   AppBundle\Service\SettingsManager:
     arguments:
-      - "@craue_config"
-      - "%craue_config.entity_name%"
-      - "@doctrine"
-      - "@libphonenumber.phone_number_util"
-      - "%country_iso%"
-      - "@logger"
+      $configEntityName: "%craue_config.entity_name%"
+      $country: "%country_iso%"
 
   AppBundle\Service\EmailManager:
     arguments:
@@ -679,3 +677,11 @@ services:
 
   AppBundle\Twig\CoopCycleExtension:
     $secret: '%secret%'
+
+  craue_config_cache_provider:
+    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+    public: false
+    arguments:
+      - 'craue_config'
+      - 0
+      - '%kernel.cache_dir%'

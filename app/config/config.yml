@@ -14,6 +14,7 @@ parameters:
     locale: "%coopcycle.locale%"
     locale_regex: fr|en|es|de
     router.request_context.host: '%host%'
+    craue_config.cache_adapter.class: Craue\ConfigBundle\CacheAdapter\SymfonyCacheComponentAdapter
 
 framework:
     #esi:             ~

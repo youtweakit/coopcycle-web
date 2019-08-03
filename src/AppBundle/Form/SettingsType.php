@@ -11,6 +11,7 @@ use libphonenumber\PhoneNumberUtil;
 use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
 use Sylius\Bundle\CurrencyBundle\Form\Type\CurrencyChoiceType;
 use Sylius\Bundle\TaxationBundle\Form\Type\TaxCategoryChoiceType;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -38,11 +39,13 @@ class SettingsType extends AbstractType
     public function __construct(
         SettingsManager $settingsManager,
         PhoneNumberUtil $phoneNumberUtil,
+        RepositoryInterface $currencyRepository,
         string $country,
         bool $isDemo)
     {
         $this->settingsManager = $settingsManager;
         $this->phoneNumberUtil = $phoneNumberUtil;
+        $this->currencyRepository = $currencyRepository;
         $this->country = $country;
         $this->isDemo = $isDemo;
     }
@@ -131,6 +134,17 @@ class SettingsType extends AbstractType
             ))
         ;
 
+        $builder->get('currency_code')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($originalValue) {
+                    return $this->currencyRepository->findOneByCode($originalValue);
+                },
+                function ($submittedValue) {
+                    return $submittedValue->getCode();
+                }
+            ))
+        ;
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
             $form = $event->getForm();
@@ -198,21 +212,6 @@ class SettingsType extends AbstractType
             foreach ($options['choices'] as $taxCategory) {
                 if ($taxCategory->getCode() === $data) {
                     $form->setData($taxCategory);
-                    break;
-                }
-            }
-
-        });
-
-        $builder->get('currency_code')->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
-
-            $form = $event->getForm();
-            $data = $event->getData();
-
-            $options = $form->getConfig()->getOptions();
-            foreach ($options['choices'] as $currency) {
-                if ($currency->getCode() === $data) {
-                    $form->setData($currency);
                     break;
                 }
             }

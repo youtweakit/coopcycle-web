@@ -4,10 +4,12 @@ namespace AppBundle\Service;
 
 use AppBundle\Utils\Settings;
 use Craue\ConfigBundle\Util\Config as CraueConfig;
+use Craue\ConfigBundle\CacheAdapter\CacheAdapterInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class SettingsManager
 {
@@ -46,19 +48,19 @@ class SettingsManager
         'google_api_key',
     ];
 
-    private $cache = [];
-
     public function __construct(
         CraueConfig $craueConfig,
-        $configEntityName,
+        string $configEntityName,
         ManagerRegistry $doctrine,
+        CacheAdapterInterface $cache,
         PhoneNumberUtil $phoneNumberUtil,
-        $country,
+        string $country,
         LoggerInterface $logger)
     {
         $this->craueConfig = $craueConfig;
         $this->configEntityName = $configEntityName;
         $this->doctrine = $doctrine;
+        $this->cache = $cache;
         $this->phoneNumberUtil = $phoneNumberUtil;
         $this->country = $country;
         $this->logger = $logger;
@@ -90,11 +92,6 @@ class SettingsManager
                 return ini_get('date.timezone');
         }
 
-        if (isset($this->cache[$name])) {
-
-            return $this->cache[$name];
-        }
-
         try {
 
             $value = $this->craueConfig->get($name);
@@ -105,8 +102,6 @@ class SettingsManager
                         $value = $this->phoneNumberUtil->parse($value, strtoupper($this->country));
                     } catch (NumberParseException $e) {}
             }
-
-            $this->cache[$name] = $value;
 
             return $value;
 
@@ -184,11 +179,8 @@ class SettingsManager
                 ->persist($setting);
         }
 
-        if (isset($this->cache[$name])) {
-            unset($this->cache[$name]);
-        }
-
         $setting->setValue($value);
+        $this->cache->set($name, $value);
     }
 
     public function flush()
