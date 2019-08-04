@@ -33,11 +33,6 @@ AppBundle\Entity\Contract:
             targetEntity: AppBundle\Entity\Restaurant
             cascade:
                 - persist
-            fetch: LAZY
-            mappedBy: null
             inversedBy: contract
-            joinColumns:
-                restaurant_id:
-                    referencedColumnName: id
-            orphanRemoval: false
+            fetch: EAGER
     lifecycleCallbacks: {  }

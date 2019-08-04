@@ -215,18 +215,12 @@ AppBundle\Entity\Restaurant:
             targetEntity: AppBundle\Entity\Contract
             cascade:
                 - persist
-            fetch: LAZY
             mappedBy: restaurant
-            inversedBy: null
-            joinColumns: {  }
-            orphanRemoval: false
         pledge:
             targetEntity: AppBundle\Entity\Restaurant\Pledge
             cascade:
                 - all
-            fetch: LAZY
             mappedBy: restaurant
-            inversedBy: null
     manyToOne:
         activeMenuTaxon:
             targetEntity: Sylius\Component\Taxonomy\Model\TaxonInterface

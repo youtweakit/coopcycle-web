@@ -34,13 +34,8 @@ AppBundle\Entity\Restaurant\Pledge:
             targetEntity: AppBundle\Entity\Restaurant
             cascade:
                 - all
-            fetch: LAZY
-            mappedBy: null
             inversedBy: pledge
-            joinColumns:
-                restaurant_id:
-                    referencedColumnName: id
-            orphanRemoval: false
+            fetch: EAGER
     manyToOne:
         user:
             targetEntity: AppBundle\Entity\ApiUser
