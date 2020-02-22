@@ -14,12 +14,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class RegistrationType extends AbstractType
 {
-    private $countryIso;
     private $isDemo;
 
-    public function __construct(string $countryIso, bool $isDemo = false)
+    public function __construct(bool $isDemo = false)
     {
-        $this->countryIso = strtoupper($countryIso);
         $this->isDemo = $isDemo;
     }
 
@@ -28,11 +26,9 @@ class RegistrationType extends AbstractType
         $builder
             ->add('givenName', TextType::class, array('label' => 'profile.givenName'))
             ->add('familyName', TextType::class, array('label' => 'profile.familyName'))
-            ->add('telephone', PhoneNumberType::class, [
-                'format' => PhoneNumberFormat::NATIONAL,
-                'default_region' => strtoupper($this->countryIso),
-                'label' => 'profile.telephone',
-            ]);
+            // Phone number will be asked during checkout
+            // @see AppBundle\Form\Checkout\CheckoutAddressType
+            ;
 
         if ($this->isDemo) {
             $builder->add('accountType', ChoiceType::class, [
@@ -48,6 +44,7 @@ class RegistrationType extends AbstractType
             ]);
         }
 
+        // Add help to "username" field
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
             $child = $form->get('username');
