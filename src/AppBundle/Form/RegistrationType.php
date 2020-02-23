@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -43,6 +44,25 @@ class RegistrationType extends AbstractType
                 'label' => 'profile.accountType'
             ]);
         }
+
+        // @see https://fr.sendinblue.com/blog/guide-opt-in/
+        // @see https://mailchimp.com/fr/help/collect-consent-with-gdpr-forms/
+        // @see https://www.mailerlite.com/blog/how-to-create-opt-in-forms-that-still-work-under-gdpr
+        $builder->add('newsletterOptin', CheckboxType::class, [
+            'label'    => 'J\'accepte de recevoir la newsletter de XXX',
+            'required' => false,
+            'mapped'   => false,
+        ]);
+        $builder->add('promotionsOptin', CheckboxType::class, [
+            'label'    => 'J\'accepte de recevoir des promotions ponctuelles (livraison offerte…)',
+            'required' => false,
+            'mapped'   => false,
+        ]);
+        // $builder->add('marketingOptin', CheckboxType::class, [
+        //     'label'    => 'J\'accepte de recevoir des emails ciblés en fonction de mes données de navigation',
+        //     'required' => false,
+        //     'mapped'   => false,
+        // ]);
 
         // Add help to "username" field
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
