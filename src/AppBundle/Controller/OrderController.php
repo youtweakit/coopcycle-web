@@ -128,17 +128,17 @@ class OrderController extends AbstractController
             return $this->redirectToRoute('order_payment');
         }
 
-        $isLoopEatValid = true;
-        if ($order->getRestaurant()->isLoopeatEnabled()) {
-            $violations = $validator->validate($order, null, ['loopeat']);
-            $isLoopEatValid = count($violations) === 0;
-        }
+        // $isLoopEatValid = true;
+        // if ($order->getRestaurant()->isLoopeatEnabled()) {
+        //     $violations = $validator->validate($order, null, ['loopeat']);
+        //     $isLoopEatValid = count($violations) === 0;
+        // }
 
         return array(
             'order' => $order,
             'asap' => $this->orderTimeHelper->getAsap($order),
             'form' => $form->createView(),
-            'loopeat_valid' => $isLoopEatValid,
+            // 'loopeat_valid' => $isLoopEatValid,
         );
     }
 

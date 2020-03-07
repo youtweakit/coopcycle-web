@@ -808,3 +808,4 @@ basics.weeks: '%count% week|%count% weeks'
 basics.none: None
 basics.yes: 'Yes'
 basics.no: 'No'
+basics.close: Close
