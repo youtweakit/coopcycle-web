@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Validation;
 
-class LoopEatOrderValidator extends ConstraintValidator
+class LoopEatBalanceValidator extends ConstraintValidator
 {
     private $client;
 
@@ -46,14 +46,16 @@ class LoopEatOrderValidator extends ConstraintValidator
         }
 
         try {
-            $currentCustomer = $this->client->currentCustomer($object->getCustomer());
-            $loopeatBalance = $currentCustomer['loopeatBalance'];
 
-            if ($loopeatBalance < $quantity) {
+            $currentCustomer = $this->client->currentCustomer($object->getCustomer());
+            $balance = $currentCustomer['loopeatBalance'];
+
+            if ($balance < $quantity) {
                 $this->context->buildViolation($constraint->insufficientBalance)
                     ->atPath('reusablePackagingEnabled')
                     ->addViolation();
             }
+
         } catch (RequestException $e) {
             $this->logger->error($e->getMessage());
         }

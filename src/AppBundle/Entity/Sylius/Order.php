@@ -27,7 +27,7 @@ use AppBundle\Sylius\Order\OrderInterface;
 use AppBundle\Sylius\Order\OrderItemInterface;
 use AppBundle\Validator\Constraints\IsOrderModifiable as AssertOrderIsModifiable;
 use AppBundle\Validator\Constraints\Order as AssertOrder;
-use AppBundle\Validator\Constraints\LoopEatOrder as AssertLoopEatOrder;
+use AppBundle\Validator\Constraints\LoopEatBalance as AssertLoopEatBalance;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sylius\Component\Channel\Model\ChannelInterface;
@@ -208,7 +208,7 @@ use Sylius\Component\Taxation\Model\TaxRateInterface;
  *
  * @AssertOrder(groups={"Default"})
  * @AssertOrderIsModifiable(groups={"cart"})
- * @AssertLoopEatOrder(groups={"loopeat"})
+ * @AssertLoopEatBalance(groups={"loopeat_balance"})
  */
 class Order extends BaseOrder implements OrderInterface
 {

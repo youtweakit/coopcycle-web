@@ -40,6 +40,12 @@
                 {{ form_widget(form.reusablePackagingEnabled) }}
               </div>
               {% endif %}
+              {% if form.loopeatRefill is defined %}
+              {# <div class="alert alert-warning py-0">
+                {{ form_widget(form.loopeatRefill, { attr: { class: 'btn btn-sm btn-warning' } }) }}
+              </div> #}
+              {{ form_widget(form.loopeatRefill) }}
+              {% endif %}
             </div>
 
             <div class="order-map__column-block">
@@ -144,10 +150,16 @@
   }
   window.addEventListener('message', onMessage, true);
 
-  $('#modal-loopeat').on('shown.bs.modal', function() {
+  $('#modal-loopeat').on('show.bs.modal', function(e) {
+    var $target = $(e.relatedTarget);
+    if ($target.data('loopeatIframeSrc')) {
+      $('#modal-loopeat iframe').attr('src', $target.data('loopeatIframeSrc'));
+    }
+  });
+  $('#modal-loopeat').on('shown.bs.modal', function(e) {
     preventUncheck = false;
   });
-  $('#modal-loopeat').on('hidden.bs.modal', function() {
+  $('#modal-loopeat').on('hidden.bs.modal', function(e) {
     if (!preventUncheck) {
       $('#checkout_address_reusablePackagingEnabled').prop('checked', false);
     }

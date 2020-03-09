@@ -88,3 +88,13 @@
 {% block _checkout_payment_shippedAt_widget %}
   {{ block('checkout_shippedAt_widget') }}
 {% endblock %}
+
+{% block _checkout_address_loopeatRefill_widget %}
+  <div class="alert alert-warning">
+    {{ alert_message }}
+    <br>
+    <div class="text-right">
+    {{ form_widget(form.refill, { attr: { class: 'btn btn-xs btn-warning' } }) }}
+    </div>
+  </div>
+{% endblock %}

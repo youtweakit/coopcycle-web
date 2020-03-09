@@ -41,6 +41,6 @@ services:
     tags:
       - { name: validator.constraint_validator }
 
-  AppBundle\Validator\Constraints\LoopEatOrderValidator:
+  AppBundle\Validator\Constraints\LoopEatBalanceValidator:
     tags:
       - { name: validator.constraint_validator }

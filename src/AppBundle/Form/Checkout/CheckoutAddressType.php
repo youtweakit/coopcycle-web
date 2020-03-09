@@ -4,6 +4,7 @@ namespace AppBundle\Form\Checkout;
 
 use ApiPlatform\Core\Api\IriConverterInterface;
 use AppBundle\Form\AddressType;
+use AppBundle\Form\Type\LoopeatRefillType;
 use AppBundle\LoopEat\Client as LoopEatClient;
 use AppBundle\Utils\PriceFormatter;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -11,6 +12,7 @@ use libphonenumber\PhoneNumberFormat;
 use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
 use Sylius\Bundle\PromotionBundle\Form\Type\PromotionCouponToCodeType;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\PromotionSubjectCoupon;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -125,6 +127,8 @@ class CheckoutAddressType extends AbstractType
 
                 // $isLoopEatValid = true;
 
+                $addReusablePackagingEnabled = true;
+
                 $attr = [
                     'data-loopeat' => json_encode($restaurant->isLoopeatEnabled()),
                 ];
@@ -132,6 +136,16 @@ class CheckoutAddressType extends AbstractType
                 if ($restaurant->isLoopeatEnabled()) {
 
                     if ($customer->hasLoopEatCredentials()) {
+
+                        $violations = $this->validator->validate($order, null, ['loopeat_balance']);
+                        $isLoopeatBalanceValid = count($violations) === 0;
+
+                        if (!$isLoopeatBalanceValid) {
+                            $form->add('loopeatRefill', LoopeatRefillType::class, [
+                                'alert_message' => (string) $violations->get(0)->getMessage(),
+                            ]);
+                            $addReusablePackagingEnabled = false;
+                        }
 
                     } else {
 
@@ -153,13 +167,9 @@ class CheckoutAddressType extends AbstractType
                         ]);
                     }
 
-                    // $violations = $this->validator->validate($order, null, ['loopeat']);
-                    // $isLoopEatValid = count($violations) === 0;
-
                 }
 
-                // if ($isLoopEatValid) {
-
+                if ($addReusablePackagingEnabled) {
                     $key = $restaurant->isLoopeatEnabled() ?
                         'reusable_packaging_loopeat_enabled' : 'reusable_packaging_enabled';
 
@@ -183,7 +193,8 @@ class CheckoutAddressType extends AbstractType
                     ];
 
                     $form->add('reusablePackagingEnabled', CheckboxType::class, $opts);
-                // }
+                }
+
             }
 
             // When the restaurant accepts quotes and the customer is allowed,

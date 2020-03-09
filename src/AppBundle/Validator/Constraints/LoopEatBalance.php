@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
-class LoopEatOrder extends Constraint
+class LoopEatBalance extends Constraint
 {
     public $insufficientBalance = 'loopeat.insufficient_balance';
 
