@@ -763,6 +763,8 @@ task.form.finish.DONE.info: La tâche a été terminée avec succès
 form.registration.username.help: "Votre nom d'utilisateur ne peut pas dépasser 15\
   \ caractères. Un nom d'utilisateur ne peut contenir que des caractères alphanumériques\
   \ (lettres A-Z, chiffres 0-9) à l'exception du tiret bas (_)\n"
+form.registration.newsletter_optin.label: J'accepte de recevoir la newsletter de %brand_name%
+form.registration.marketing_optin.label: J'accepte de recevoir des promotions ponctuelles
 order.adjustment_type.reusable_packaging: Emballage
 form.store_type.package_set.label: Ensemble d'emballages
 adminDashboard.package_sets.title: Emballages

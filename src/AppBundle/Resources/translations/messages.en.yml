@@ -491,6 +491,8 @@ form.delivery_embed.vehicle.disclaimer: We deliver on cargo bike items of more t
 form.registration.username.help: "Your username cannot be longer than 15 characters.\
   \ A username can only contain alphanumeric characters (letters A-Z, numbers 0-9)\
   \ with the exception of underscores.\n"
+form.registration.newsletter_optin.label: I agree to receive the %brand_name% newsletter
+form.registration.marketing_optin.label: I agree to receive occasional promotions
 form.local_business.stripe_account.title: Stripe account
 form.local_business.stripe_account.help: Connect a Stripe account to transfer money
   to another bank account

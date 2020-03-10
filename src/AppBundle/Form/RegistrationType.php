@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Service\SettingsManager;
 use libphonenumber\PhoneNumberFormat;
 use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
 use Symfony\Component\Form\AbstractType;
@@ -15,10 +16,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class RegistrationType extends AbstractType
 {
+    private $settingsManager;
     private $isDemo;
 
-    public function __construct(bool $isDemo = false)
+    public function __construct(SettingsManager $settingsManager, bool $isDemo = false)
     {
+        $this->settingsManager = $settingsManager;
         $this->isDemo = $isDemo;
     }
 
@@ -49,20 +52,18 @@ class RegistrationType extends AbstractType
         // @see https://mailchimp.com/fr/help/collect-consent-with-gdpr-forms/
         // @see https://www.mailerlite.com/blog/how-to-create-opt-in-forms-that-still-work-under-gdpr
         $builder->add('newsletterOptin', CheckboxType::class, [
-            'label'    => 'J\'accepte de recevoir la newsletter de XXX',
+            'label'    => 'form.registration.newsletter_optin.label',
+            'label_translation_parameters' => [
+                '%brand_name%' => $this->settingsManager->get('brand_name'),
+            ],
             'required' => false,
             'mapped'   => false,
         ]);
-        $builder->add('promotionsOptin', CheckboxType::class, [
-            'label'    => 'J\'accepte de recevoir des promotions ponctuelles (livraison offerte…)',
+        $builder->add('marketingOptin', CheckboxType::class, [
+            'label'    => 'form.registration.marketing_optin.label',
             'required' => false,
             'mapped'   => false,
         ]);
-        // $builder->add('marketingOptin', CheckboxType::class, [
-        //     'label'    => 'J\'accepte de recevoir des emails ciblés en fonction de mes données de navigation',
-        //     'required' => false,
-        //     'mapped'   => false,
-        // ]);
 
         // Add help to "username" field
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {

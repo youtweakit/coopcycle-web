@@ -45,6 +45,11 @@ AppBundle\Entity\ApiUser:
         remotePushTokens:
             targetEntity: AppBundle\Entity\RemotePushToken
             mappedBy: user
+        optinConsents:
+            targetEntity: AppBundle\Entity\OptinConsent
+            mappedBy: user
+            cascade:
+                - persist
     manyToOne:
         channel:
             targetEntity: Sylius\Component\Channel\Model\ChannelInterface

@@ -101,6 +101,8 @@ class ApiUser extends BaseUser implements JWTUserInterface, ChannelAwareInterfac
 
     protected $quotesAllowed = false;
 
+    protected $optinConsents;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
@@ -108,6 +110,7 @@ class ApiUser extends BaseUser implements JWTUserInterface, ChannelAwareInterfac
         $this->stores = new ArrayCollection();
         $this->stripeAccounts = new ArrayCollection();
         $this->remotePushTokens = new ArrayCollection();
+        $this->optinConsents = new ArrayCollection();
 
         parent::__construct();
     }
@@ -313,6 +316,40 @@ class ApiUser extends BaseUser implements JWTUserInterface, ChannelAwareInterfac
     public function setQuotesAllowed($quotesAllowed)
     {
         $this->quotesAllowed = $quotesAllowed;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptinConsents()
+    {
+        return $this->optinConsents;
+    }
+
+    /**
+     * @param mixed $optinConsents
+     *
+     * @return self
+     */
+    public function setOptinConsents($optinConsents)
+    {
+        $this->optinConsents = $optinConsents;
+
+        return $this;
+    }
+
+    /**
+     * @param mixed $optinConsent
+     *
+     * @return self
+     */
+    public function addOptinConsent($optinConsent)
+    {
+        $optinConsent->setUser($this);
+
+        $this->optinConsents->add($optinConsent);
 
         return $this;
     }

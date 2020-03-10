@@ -1,0 +1,25 @@
+AppBundle\Entity\OptinConsent:
+    type: entity
+    table: optin_consent
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        type:
+            type: string
+        createdAt:
+            type: datetime
+            column: created_at
+            gedmo:
+                timestampable:
+                    on: create
+        withdrawedAt:
+            type: datetime
+            column: withdrawed_at
+            nullable: true
+    manyToOne:
+        user:
+            targetEntity: AppBundle\Entity\ApiUser
