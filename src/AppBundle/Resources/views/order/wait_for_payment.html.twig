@@ -1,0 +1,89 @@
+{% extends "@App/base.html.twig" %}
+
+{% block body %}
+<div class="container container--full-height">
+
+  {% if not order.empty %}
+
+    {% include '@App/order/breadcrumb.html.twig' %}
+
+    {% include '@App/order/_partials/time.html.twig' %}
+    <div class="row">
+      <div class="col-xs-12 col-md-6">
+        <div class="border mb-3">
+
+          <h4 class="bg-light p-3 m-0">{{ order.restaurant.name }}</h4>
+          <div class="px-3 py-4">
+            {% include "@App/_partials/order/restaurant_details.html.twig" %}
+          </div>
+
+          <h4 class="bg-light p-3 m-0">{{ 'order.cart.title'|trans }}</h4>
+          <div id="items">
+            {% include '@App/_partials/order/items.html.twig' with { with_taxes: false } %}
+          </div>
+
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-6">
+        <div class="border mb-3">
+          <h4 class="bg-light p-3 m-0">{% trans %}order.payment.title{% endtrans %}</h4>
+          <div class="p-4 text-center">
+            <p>En attente de la confirmation de votre banque…</p>
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% else %}
+    <div class="alert alert-warning">
+      {% trans from 'validators' %}cart.empty{% endtrans %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if not order.empty %}
+<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript">
+
+{% if stripe_options.stripe_account is defined %}
+var stripe = Stripe("{{ coopcycle_setting('stripe_publishable_key') }}", { stripeAccount: "{{ stripe_options.stripe_account }}" });
+{% else %}
+var stripe = Stripe("{{ coopcycle_setting('stripe_publishable_key') }}");
+{% endif %}
+
+// https://stripe.com/docs/sources/best-practices
+
+// After some amount of time, we should stop trying to resolve the order synchronously:
+var MAX_POLL_COUNT = 10;
+var pollCount = 0;
+
+function pollForSourceStatus() {
+  stripe
+    .retrieveSource({
+      id: "{{ source_id }}",
+      client_secret: "{{ client_secret }}"
+    })
+    .then(function(result) {
+      var source = result.source;
+      if (source.status === 'chargeable') {
+        console.log('SOURCE CHARGEABLE');
+        // Make a request to your server to charge the Source.
+        // Depending on the Charge status, show your customer the relevant message.
+      } else if (source.status === 'pending' && pollCount < MAX_POLL_COUNT) {
+        // Try again in a second, if the Source is still `pending`:
+        pollCount += 1;
+        setTimeout(pollForSourceStatus, 10000);
+      } else {
+        // Depending on the Source status, show your customer the relevant message.
+      }
+    });
+}
+
+pollForSourceStatus();
+
+</script>
+{% endif %}
+{% endblock %}

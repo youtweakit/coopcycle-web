@@ -289,6 +289,7 @@ order.delivery_time: Delivery %time%
 order.payment.card_number.help: 'A stripe <a href="https://stripe.com/docs/testing#cards"
   target="_blank" tabindex="-1">test card number</a> is pre-filled. No account will
   be debited. '
+order.payment.redirect.help: You will be redirected to the banking site to complete your payment
 order.state.cart: Cart
 order.state.accepted: Accepted
 order.state.refused: Refused
@@ -591,6 +592,7 @@ form.checkout_address.tip_amount.label: Tip
 form.checkout_address.tip_amount.help: Thank you ❤
 form.checkout_address.add_tip.label: Apply
 form.checkout_address.quote.label: Request a quote
+form.checkout_payment.method.label: Please choose a payment option
 form.task_export.start.label: Start
 form.task_export.end.label: End
 form.api_app.name.label: App name

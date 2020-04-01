@@ -175,3 +175,9 @@ services:
 
   AppBundle\Form\OrderExportType:
     tags: [ form.type ]
+
+  AppBundle\Form\Checkout\CheckoutPaymentType:
+    arguments:
+      $country: '%country_iso%'
+      $debug: '%kernel.debug%'
+    tags: [ form.type ]

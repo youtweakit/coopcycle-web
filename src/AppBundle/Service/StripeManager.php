@@ -2,22 +2,30 @@
 
 namespace AppBundle\Service;
 
+use Hashids\Hashids;
 use Psr\Log\LoggerInterface;
 use Stripe;
 use Sylius\Component\Payment\Model\PaymentInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class StripeManager
 {
     private $settingsManager;
+    private $urlGenerator;
+    private $secret;
     private $logger;
 
     const STRIPE_API_VERSION = '2019-09-09';
 
     public function __construct(
         SettingsManager $settingsManager,
+        UrlGeneratorInterface $urlGenerator,
+        string $secret,
         LoggerInterface $logger)
     {
         $this->settingsManager = $settingsManager;
+        $this->urlGenerator = $urlGenerator;
+        $this->secret = $secret;
         $this->logger = $logger;
     }
 
@@ -291,5 +299,33 @@ class StripeManager
         $args['refund_application_fee'] = $refundApplicationFee;
 
         return Stripe\Refund::create($args, $stripeOptions);
+    }
+
+    /**
+     * @return Stripe\Source
+     */
+    public function createGiropaySource(PaymentInterface $payment)
+    {
+        $this->configure();
+
+        $hashids = new Hashids($this->secret, 8);
+
+        $returnUrl = $this->urlGenerator->generate('payment_confirm', [
+            'hashId' => $hashids->encode($payment->getId()),
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $stripeOptions = $this->getStripeOptions($payment);
+
+        return Stripe\Source::create([
+            'type' => 'giropay',
+            'amount' => $payment->getAmount(),
+            'currency' => strtolower($payment->getCurrencyCode()),
+            'owner' => [
+                'name' => 'Johnny John'
+            ],
+            'redirect' => [
+                'return_url' => $returnUrl
+            ]
+        ], $stripeOptions);
     }
 }

@@ -176,6 +176,10 @@ class OrderController extends AbstractController
             $order->getLastPayment(PaymentInterface::STATE_CART)
         );
 
+        // $spec = \Stripe\CountrySpec::retrieve('DE');
+        // print_r($spec->supported_payment_methods);
+        // exit;
+
         $form = $this->createForm(CheckoutPaymentType::class, $order);
 
         $parameters =  [
@@ -189,6 +193,16 @@ class OrderController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $payment = $order->getLastPayment(PaymentInterface::STATE_CART);
+
+            if ($payment->hasSource()) {
+
+                // TODO Freeze shipping time?
+                // Maybe better after source becomes chargeable
+
+                $this->objectManager->flush();
+
+                return $this->redirect($payment->getSourceRedirectUrl());
+            }
 
             $orderManager->checkout($order, $form->get('stripePayment')->get('stripeToken')->getData());
 
