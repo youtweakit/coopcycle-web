@@ -199,6 +199,8 @@ abstract class LocalBusiness extends BaseLocalBusiness
 
     protected $products;
 
+    protected $stripePaymentMethods = [];
+
     public function __construct()
     {
         $this->servesCuisine = new ArrayCollection();
@@ -955,5 +957,17 @@ abstract class LocalBusiness extends BaseLocalBusiness
         $this->loopeatEnabled = $loopeatEnabled;
 
         return $this;
+    }
+
+    /**
+     * @param string $paymentMethod
+     */
+    public function enableStripePaymentMethod($paymentMethod)
+    {
+        $paymentMethods = $this->stripePaymentMethods;
+
+        $paymentMethods[] = $paymentMethod;
+
+        $this->stripePaymentMethods = array_unique($paymentMethods);
     }
 }

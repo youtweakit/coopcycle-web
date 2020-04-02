@@ -163,6 +163,9 @@ AppBundle\Entity\LocalBusiness:
             type: text
             nullable: true
             column: loopeat_refresh_token
+        stripePaymentMethods:
+            type: json_array
+            column: stripe_payment_methods
     manyToMany:
         servesCuisine:
             targetEntity: AppBundle\Entity\Cuisine
